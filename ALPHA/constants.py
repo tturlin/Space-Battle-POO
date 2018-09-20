@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 C = 1
@@ -16,4 +17,11 @@ THETA_ARRAY = np.linspace(0, 2*np.pi, NTHETA, dtype=float)
 
 DT = 1/1000
 
-LEN_INTEGRATION = 30000
+LEN_INTEGRATION = 150
+
+GAME_ZONE = 50
+
+GZ = GAME_ZONE * np.ones(NTHETA)
+
+def display_game_zone():
+    plt.polar(THETA_ARRAY, GZ, 'k')
