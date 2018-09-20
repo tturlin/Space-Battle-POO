@@ -19,8 +19,11 @@ class Spacecraft():
         self.trajplot = np.zeros((1, 2), dtype=float)
         self.trajplot[0, 0] = self.theta
         self.trajplot[0, 1] = self.r
+        self.heavy_shot = 5
+        self.shot = 5
+        self.mass = 1e6 #kg
 
-    def display_spacecraft(self):
+    def display(self):
         plt.polar(self.theta, self.r, '*', c=self.color, markersize=10)
 
     def acceleration(self, r,  black_hole):
@@ -54,14 +57,16 @@ class Spacecraft():
             self.stop_condition()
             if self.loose:
                 break
-        self.velo = velocity[:,1]
-
-        # self.l0 = self.r * self.vt
 
 
     def display_trajectory(self):
-        plt.polar(self.trajplot[:,0], self.trajplot[:,1], c=self.color, linestyle = ':')
+        plt.polar(self.trajplot[:,0], self.trajplot[:,1], c=self.color, linestyle = '-',  linewidth=0.25)
 
     def stop_condition(self):
-        if self.r <= 1. or self.r >20.:
+        if self.r <= 1. or self.r > c.GAME_ZONE:
             self.loose = True
+
+    # def collide(self, object):
+    #     col_dist = np.sqrt(self.r**2 + object.r**2 - 2*self.r*object.r*np.cos(abs(self.theta-object.theta)))
+    #     if (col_dist <= (2 * self.collide_sphere)):
+    #         pass
