@@ -65,8 +65,3 @@ class Spacecraft():
     def stop_condition(self):
         if self.r <= 1. or self.r > c.GAME_ZONE:
             self.loose = True
-
-    # def collide(self, object):
-    #     col_dist = np.sqrt(self.r**2 + object.r**2 - 2*self.r*object.r*np.cos(abs(self.theta-object.theta)))
-    #     if (col_dist <= (2 * self.collide_sphere)):
-    #         pass
