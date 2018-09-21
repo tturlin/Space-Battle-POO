@@ -13,18 +13,30 @@ class Spacecraft():
         self.vr = vr
         self.vt = vt
         self.color = color
-        self.collide_sphere = 0.1
+        self.collide_sphere = 0.05
         self.l0 = self.r * self.vt
         self.loose = False
+        self.heavy_shot = 5
+        self.light_shot = 5
+        self.mass = 1e6 #kg
+        self.om = np.array([[self.r], [self.theta]])
+        self.v = np.array([[self.vr], [self.vt]])
         self.trajplot = np.zeros((1, 2), dtype=float)
         self.trajplot[0, 0] = self.theta
         self.trajplot[0, 1] = self.r
-        self.heavy_shot = 5
-        self.shot = 5
-        self.mass = 1e6 #kg
+        self.shooting = False
+
+    def __repr__(self):
+        return """Your position is {0}Rs, {1}rad.
+Your tangential speed is {2}c.
+Your radial speed is {3}c.
+Heavy shot(s) remaining : {4}
+Light shot(s) remaining : {5}""".format(self.r, self.theta, self.vt,
+                                                self.vr, self.heavy_shot,
+                                                self.light_shot)
 
     def display(self):
-        plt.polar(self.theta, self.r, '*', c=self.color, markersize=10)
+        plt.polar(self.theta, self.r, '*', c=self.color, markersize=5)
 
     def acceleration(self, r,  black_hole):
         self.ar = - (black_hole.g * black_hole.mass)/(self.r**2) + (self.r - 3/2)*(self.l0**2/(self.r**4))

@@ -1,37 +1,15 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 from black_hole import Black_hole
 import constants as c
+import functions as f
 from shots import *
 from spacecraft import Spacecraft
 
-
-def action(object, spacecraft):
-    act = input("What do you wanna do this turn : Wait, Shot, Heavy shot ? ")
-
-    if act == "Shot":
-        if spacecraft.shot:
-            phi = float(input("Which direction would you give to the shot, in [0, 2pi[ ? "))
-            shot = Shot(phi, spacecraft)
-            spacecraft.shot -= 1
-            object.append(shot)
-        else:
-            print("It dont remain to you any light shot.")
-            action(object, spacecraft)
-    elif act == "Heavy shot":
-        if spacecraft.heavy_shot:
-            phi = float(input("Which direction would you give to the shot, in [0, 2pi[ ? "))
-            hshot = Heavy_shot(phi, spacecraft)
-            spacecraft.heavy_shot -= 1
-            object.append(hshot)
-        else:
-            print("It dont remain to you any Heavy shot.")
-            action(object, spacecraft)
-    else:
-        pass
-    return object
+fire = False
 
 dist = 0
 angle = 'q'
@@ -40,6 +18,7 @@ vr = 0
 
 
 while dist <= 1. or dist > c.GAME_ZONE:
+    print("")
     try:
         dist = float(input("Distance to the event horizon , in Rs : "))
     except:
@@ -51,7 +30,7 @@ while type(angle) != type(1.):
     except:
         pass
 
-while 0. >= vt or vt >= 1.:
+while 0. >= abs(vt) or abs(vt) >= 1.:
     try:
         vt = float(input("Tangential speed, in percentage of c : "))
     except:
@@ -66,9 +45,9 @@ while 0. >= vr or vr >= 1.:
 
 hole = Black_hole(100)
 player = Spacecraft(dist, angle, vr, vt, 'b')
-foe = Spacecraft(round(float(np.random.uniform(5, 15)), 3),\
-                 player.theta + np.pi, round(float(np.random.uniform(0, 0.1)), 3),\
-                 round(float(np.random.rand()), 3), 'r')
+foe = Spacecraft(round(float(np.random.uniform(10, 35)), 3),\
+                 player.theta + np.pi, round(float(np.random.uniform(-0.1, 0.1)), 3),\
+                 round(float(np.random.choice([-1., 1.])* np.random.normal(0.3, 0.1)), 3), 'r')
 
 object=[player, foe]
 
@@ -81,18 +60,50 @@ plt.show(block=False)
 input()
 
 while not player.loose and not foe.loose:
+    plt.clf()
+    hole.event_horizon_display()
+    c.display_game_zone()
+
+    print(player.__repr__())
+
+    if player.light_shot + player.heavy_shot == 0:
+        for j in range(4000):
+            for i in object:
+                i.leapfrog(hole)
+                f.collide(i, object, hole)
+                i.display_trajectory()
+            if j%100==0:
+                plt.show(block=False)
+                for i in range(10000):
+                    i**5
+            if player.loose or foe.loose:
+                break
+        break
+
+
     for j in range(200):
         for i in object:
             i.leapfrog(hole)
+            if fire:
+                f.collide(i, object[0:-2], hole)
+                if i == object[-1]:
+                    f.collide(i, object[1:], hole)
+            else:
+                f.collide(i, object, hole)
             i.display_trajectory()
 
     for i in object:
         i.display()
 
-    plt.show(block=False)
-    object = action(object, player)
+    if player.loose or foe.loose:
+        plt.show(block=False)
+        break
 
-if player.loose:
-    print("you loose")
+    plt.show(block=False)
+    object , fire = f.action(object, player)
+
+if player.loose or foe.r >= c.GAME_ZONE:
+    print("You loose.")
 else:
-    print("you win")
+    print("You win.")
+input("Press Enter to quit game.")

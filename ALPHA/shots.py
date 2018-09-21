@@ -10,19 +10,22 @@ class Heavy_shot():
     def __init__(self, phi, spacecraft):
         self.r = spacecraft.r
         v=0.1
-        init_angle = np.arctan(spacecraft.vt / spacecraft.vr)
-        angle = phi + init_angle
         self.theta =spacecraft.theta
-        self.vr = spacecraft.vr + v * np.sin(angle)
-        self.vt = spacecraft.vt + v * np.cos(angle)
-        self.collide_sphere = 0.1
+        self.vr = spacecraft.vr + v * np.sin(2*np.pi - phi)
+        self.vt = spacecraft.vt + v * np.cos(2*np.pi - phi)
+        self.collide_sphere = 0.
         self.l0 = self.r * self.vt
         self.loose = False
+        self.color = 'k'
+        self.mass = 500 #kg
+        self.om = np.array([[self.r], [self.theta]])
+        self.v = np.array([[self.vr], [self.vt]])
         self.trajplot = np.zeros((1, 2), dtype=float)
         self.trajplot[0, 0] = self.theta
         self.trajplot[0, 1] = self.r
-        self.color = 'k'
-        self.mass = 500 #kg
+
+    def __repr__(self):
+        pass
 
     def display(self):
         plt.polar(self.theta, self.r, '+', c=self.color, markersize=5)
@@ -68,23 +71,23 @@ class Heavy_shot():
             self.loose = True
 
 
-class Shot():
+class Light_shot():
     """Gestion des missiles leger"""
     def __init__(self, phi, spacecraft):
         self.r = spacecraft.r
-        v=0.1
-        init_angle = np.arctan(spacecraft.vt / spacecraft.vr)
-        angle = phi + init_angle
+        v=0.3
         self.theta =spacecraft.theta
-        self.vr = spacecraft.vr + v * np.sin(angle)
-        self.vt = spacecraft.vt + v * np.cos(angle)
-        self.collide_sphere = 0.1
+        self.vr = spacecraft.vr + v * np.sin(2*np.pi - phi)
+        self.vt = spacecraft.vt + v * np.cos(2*np.pi - phi)
+        self.collide_sphere = 0.
         self.l0 = self.r * self.vt
         self.loose = False
+        self.color = 'g'
+        self.om = np.array([[self.r], [self.theta]])
+        self.v = np.array([[self.vr], [self.vt]])
         self.trajplot = np.zeros((1, 2), dtype=float)
         self.trajplot[0, 0] = self.theta
         self.trajplot[0, 1] = self.r
-        self.color = 'k'
 
     def display(self):
         plt.polar(self.theta, self.r, '+', c=self.color, markersize=5)
