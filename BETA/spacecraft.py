@@ -13,7 +13,7 @@ class Spacecraft():
         self.vr = vr
         self.vt = vt
         self.color = color
-        self.collide_sphere = 0.1
+        self.collide_sphere = 1.
         self.l0 = self.r * self.vt
         self.loose = False
         self.heavy_shot = 3
@@ -66,14 +66,23 @@ Light shot(s) remaining : {5}""".format(self.r, self.theta, self.vt,
 
             if i%100 == 0:
                 self.trajplot = np.append(self.trajplot, [traj[i,:]], axis=0)
+
+            if self.r >= c.GAME_ZONE:
+                self.theta = self.theta + np.pi
+                self.vr = -self.vr
+                self.vt = -self.vt
+                self.trajplot = np.zeros((1, 2), dtype=float)
+                self.trajplot[0, 0] = self.theta
+                self.trajplot[0, 1] = self.r
+
             self.stop_condition()
             if self.loose:
                 break
 
 
     def display_trajectory(self):
-        plt.polar(self.trajplot[:,0], self.trajplot[:,1], c=self.color, linestyle = ':')
+        plt.polar(self.trajplot[:,0], self.trajplot[:,1], c=self.color, linestyle = '', marker = ',' )
 
     def stop_condition(self):
-        if self.r <= 1. or self.r > c.GAME_ZONE:
+        if self.r <= 1.:
             self.loose = True

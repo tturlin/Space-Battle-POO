@@ -17,7 +17,7 @@ class Heavy_shot():
         self.l0 = self.r * self.vt
         self.loose = False
         self.color = 'k'
-        self.mass = 500 #kg
+        self.mass = 5e4#kg
         self.om = np.array([[self.r], [self.theta]])
         self.v = np.array([[self.vr], [self.vt]])
         self.trajplot = np.zeros((1, 2), dtype=float)
@@ -57,6 +57,14 @@ class Heavy_shot():
             self.theta = float(traj[i, 0])
             self.vt = velocity[i, 0]
 
+            if self.r >= c.GAME_ZONE:
+                self.theta = self.theta + np.pi
+                self.vr = -self.vr
+                self.vt = -self.vt
+                self.trajplot = np.zeros((1, 2), dtype=float)
+                self.trajplot[0, 0] = self.theta
+                self.trajplot[0, 1] = self.r
+
             if i%100 == 0:
                 self.trajplot = np.append(self.trajplot, [traj[i,:]], axis=0)
             self.stop_condition()
@@ -65,10 +73,10 @@ class Heavy_shot():
 
 
     def display_trajectory(self):
-        plt.polar(self.trajplot[:,0], self.trajplot[:,1], c=self.color, linestyle = '-', linewidth=0.25)
+        plt.polar(self.trajplot[:,0], self.trajplot[:,1], c=self.color, linestyle = '', marker = ',' )
 
     def stop_condition(self):
-        if self.r <= 1. or self.r > c.GAME_ZONE:
+        if self.r <= 1.:
             self.loose = True
 
 
@@ -120,6 +128,14 @@ class Light_shot():
             self.theta = float(traj[i, 0])
             self.vt = velocity[i, 0]
 
+            if self.r >= c.GAME_ZONE:
+                self.theta = self.theta + np.pi
+                self.vr = -self.vr
+                self.vt = -self.vt
+                self.trajplot = np.zeros((1, 2), dtype=float)
+                self.trajplot[0, 0] = self.theta
+                self.trajplot[0, 1] = self.r
+
             if i%100 == 0:
                 self.trajplot = np.append(self.trajplot, [traj[i,:]], axis=0)
             self.stop_condition()
@@ -127,8 +143,8 @@ class Light_shot():
                 break
 
     def display_trajectory(self):
-        plt.polar(self.trajplot[:,0], self.trajplot[:,1], c=self.color, linestyle = '-', linewidth=0.25)
+        plt.polar(self.trajplot[:,0], self.trajplot[:,1], c=self.color, linestyle = '', marker = ',' )
 
     def stop_condition(self):
-        if self.r <= 1. or self.r > c.GAME_ZONE:
+        if self.r <= 1.:
             self.loose = True

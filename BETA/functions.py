@@ -5,7 +5,7 @@ from spacecraft import Spacecraft
 
 def action(object, spacecraft):
     if type(object[-2]) == Light_shot or type(object[-2]) == Heavy_shot:
-        object[-2].collide_sphere = 0.05
+        object[-2].collide_sphere = 1
     act = input("What do you wanna do this turn : Wait, Light shot, Heavy shot ? ")
     spacecraft.shooting = False
     if act == "Light shot":
@@ -25,6 +25,7 @@ def action(object, spacecraft):
             spacecraft.heavy_shot -= 1
             object.append(hshot)
             spacecraft.shooting = True
+            recoil(spacecraft, hshot)
         else:
             print("It dont remain to you any Heavy shot.")
             action(object, spacecraft)
@@ -179,3 +180,12 @@ def two_player():
 
     player2 = Spacecraft(dist, angle, vr, vt, 'r')
     return player1, player2, two_player
+
+
+def recoil(spacecraft, heavy_shot):
+    vs = np.array([spacecraft.vt, spacecraft.vr])
+    vh = np.array([heavy_shot.vt, heavy_shot.vr])
+    vs -= vh*np.log(spacecraft.mass/(spacecraft.mass - heavy_shot.mass))
+    spacecraft.mass -= heavy_shot.mass
+    spacecraft.vt = vs[0]
+    spacecraft.vr = vs[1]

@@ -34,13 +34,7 @@ while not player1.loose and not player2.loose:
     hole.event_horizon_display()
     c.display_game_zone()
 
-    if two_player:
-        print("Player 1 : ")
-        print(player1.__repr__())
-        print("Player 2 : ")
-        print(player2.__repr__())
-    else:
-        print(player1.__repr__())
+
 
 
     if two_player:
@@ -71,7 +65,7 @@ while not player1.loose and not player2.loose:
                     f.collide(i, object, hole)
                     i.display()
                     i.display_trajectory()
-                if j%100==0:
+                if j%500==0:
                     plt.show()
                     plt.pause(0.02)
                 if player1.loose or player2.loose:
@@ -97,16 +91,31 @@ while not player1.loose and not player2.loose:
         break
 
     plt.show(block=False)
+
     if two_player:
         print("Player 1 : ")
+        print(player1.__repr__())
         object = f.action(object, player1)
+        print("")
         print("Player 2 : ")
+        print(player2.__repr__())
         object = f.action(object, player2)
-    else:
-        object = f.action(object, player1)
+        print("")
 
-if player1.loose or player2.r >= c.GAME_ZONE:
-    print("You loose.")
+    else:
+        print(player1.__repr__())
+        object = f.action(object, player1)
+    
+if not two_player:
+    if player1.loose or player2.r >= c.GAME_ZONE:
+        print("You loose.")
+    else:
+        print("You win.")
 else:
-    print("You win.")
+    if (not player1.loose and not player2.loose) or (player1.loose and player2.loose):
+        print("There is no winner.")
+    elif player1.loose:
+        print("Player 2 win.")
+    else:
+        print("Player 1 win.")
 input("Press Enter to quit game.")
