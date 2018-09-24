@@ -4,16 +4,15 @@ from shots import *
 from spacecraft import Spacecraft
 
 def action(object, spacecraft):
-    if type(object[-1]) == Light_shot or type(object[-1]) == Heavy_shot:
-        object[-1].collide_sphere = 0.01
+    if type(object[-2]) == Light_shot or type(object[-2]) == Heavy_shot:
+        object[-2].collide_sphere = 0.05
     act = input("What do you wanna do this turn : Wait, Light shot, Heavy shot ? ")
-    fire = False
+    spacecraft.shooting = False
     if act == "Light shot":
         if spacecraft.light_shot:
             phi = float(input("Which direction would you give to the shot, in [0, 2pi[ ? "))
             shot = Light_shot(phi, spacecraft)
             spacecraft.light_shot -= 1
-            fire = True
             object.append(shot)
             spacecraft.shooting = True
         else:
@@ -25,14 +24,14 @@ def action(object, spacecraft):
             hshot = Heavy_shot(phi, spacecraft)
             spacecraft.heavy_shot -= 1
             object.append(hshot)
-            fire = True
             spacecraft.shooting = True
         else:
             print("It dont remain to you any Heavy shot.")
             action(object, spacecraft)
     else:
+        spacecraft.shooting = False
         pass
-    return object, fire
+    return object
 
 def collide(actual,objects, hole):
     for i in objects:
@@ -67,3 +66,116 @@ def collide(actual,objects, hole):
         for i in objects:
             if i.loose:
                 objects.remove(i)
+
+
+def one_player():
+    two_player = False
+    dist = 0
+    angle = 'q'
+    vt = 0
+    vr = 0
+
+
+    print("The game zone is between 1Rs and ", c.GAME_ZONE,"RS.")
+    while dist <= 1. or dist > c.GAME_ZONE:
+        try:
+            dist = float(input("Distance to the event horizon , in Rs : "))
+        except:
+            pass
+
+    while type(angle) != type(1.):
+        try:
+            angle = float(input("Angle from axis, in rad : "))
+        except:
+            pass
+
+    while 0. >= abs(vt) or abs(vt) >= 1.:
+        try:
+            vt = float(input("Tangential speed, in percentage of c : "))
+        except:
+            pass
+
+    while 0. >= vr or vr >= 1.:
+        try:
+            vr = float(input("Radial speed, in percentage of c : "))
+        except:
+            pass
+
+
+    player = Spacecraft(dist, angle, vr, vt, 'b')
+    foe = Spacecraft(round(float(np.random.uniform(10, 35)), 3),\
+                     player.theta + np.pi, round(float(np.random.uniform(-0.1, 0.1)), 3),\
+                     round(float(np.random.choice([-1., 1.])* np.random.normal(0.3, 0.1)), 3), 'r')
+
+    return player, foe, two_player
+
+
+def two_player():
+    two_player = True
+    dist = 0
+    angle = 'q'
+    vt = 0
+    vr = 0
+
+    print("Player 1 : ")
+    print("The game zone is between 1Rs and ", c.GAME_ZONE,"RS.")
+    while dist <= 1. or dist > c.GAME_ZONE:
+        try:
+            dist = float(input("Distance to the event horizon , in Rs : "))
+        except:
+            pass
+
+    while type(angle) != type(1.):
+        try:
+            angle = float(input("Angle from axis, in rad : "))
+        except:
+            pass
+
+    while 0. >= abs(vt) or abs(vt) >= 1.:
+        try:
+            vt = float(input("Tangential speed, in percentage of c : "))
+        except:
+            pass
+
+    while 0. >= vr or vr >= 1.:
+        try:
+            vr = float(input("Radial speed, in percentage of c : "))
+        except:
+            pass
+
+    player1 = Spacecraft(dist, angle, vr, vt, 'b')
+
+
+    dist = 0
+    angle = 'q'
+    vt = 0
+    vr = 0
+
+    print("Player 2 : ")
+    print("The game zone is between 1Rs and ", c.GAME_ZONE,"RS.")
+    while dist <= 1. or dist > c.GAME_ZONE:
+        try:
+            dist = float(input("Distance to the event horizon , in Rs : "))
+        except:
+            pass
+
+    while type(angle) != type(1.):
+        try:
+            angle = float(input("Angle from axis, in rad : "))
+        except:
+            pass
+
+    while 0. >= abs(vt) or abs(vt) >= 1.:
+        try:
+            vt = float(input("Tangential speed, in percentage of c : "))
+        except:
+            pass
+
+    while 0. >= vr or vr >= 1.:
+        try:
+            vr = float(input("Radial speed, in percentage of c : "))
+        except:
+            pass
+
+    player2 = Spacecraft(dist, angle, vr, vt, 'r')
+    return player1, player2, two_player

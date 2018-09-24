@@ -9,82 +9,79 @@ import functions as f
 from shots import *
 from spacecraft import Spacecraft
 
-fire = False
-
-dist = 0
-angle = 'q'
-vt = 0
-vr = 0
-
-
-while dist <= 1. or dist > c.GAME_ZONE:
-    print("")
-    try:
-        dist = float(input("Distance to the event horizon , in Rs : "))
-    except:
-        pass
-
-while type(angle) != type(1.):
-    try:
-        angle = float(input("Angle from axis, in rad : "))
-    except:
-        pass
-
-while 0. >= abs(vt) or abs(vt) >= 1.:
-    try:
-        vt = float(input("Tangential speed, in percentage of c : "))
-    except:
-        pass
-
-while 0. >= vr or vr >= 1.:
-    try:
-        vr = float(input("Radial speed, in percentage of c : "))
-    except:
-        pass
-
-
 hole = Black_hole(100)
-player = Spacecraft(dist, angle, vr, vt, 'b')
-foe = Spacecraft(round(float(np.random.uniform(10, 35)), 3),\
-                 player.theta + np.pi, round(float(np.random.uniform(-0.1, 0.1)), 3),\
-                 round(float(np.random.choice([-1., 1.])* np.random.normal(0.3, 0.1)), 3), 'r')
 
-object=[player, foe]
+two_player = int(input("Would you play in solo mode or two player mode ?\nSolo mode = 1\nTwo player mode = 2\n"))
+if two_player == 1:
+    player1, player2 , two_player = f.one_player()
+else:
+    player1, player2 , two_player = f.two_player()
 
+
+plt.ion()
 hole.event_horizon_display()
 c.display_game_zone()
+
+object = [player1, player2]
 
 for i in object:
     i.display()
 plt.show(block=False)
-input()
+input("This is the initial position, press Enter to continue.")
 
-while not player.loose and not foe.loose:
+while not player1.loose and not player2.loose:
     plt.clf()
     hole.event_horizon_display()
     c.display_game_zone()
 
-    print(player.__repr__())
+    if two_player:
+        print("Player 1 : ")
+        print(player1.__repr__())
+        print("Player 2 : ")
+        print(player2.__repr__())
+    else:
+        print(player1.__repr__())
 
-    if player.light_shot + player.heavy_shot == 0:
-        for j in range(4000):
-            for i in object:
-                i.leapfrog(hole)
-                f.collide(i, object, hole)
-                i.display_trajectory()
-            if j%100==0:
-                plt.show(block=False)
-                for i in range(10000):
-                    i**5
-            if player.loose or foe.loose:
-                break
-        break
 
+    if two_player:
+        if player1.light_shot + player1.heavy_shot == 0 and player2.light_shot + player2.heavy_shot == 0:
+            for j in range(4000):
+                plt.clf()
+                hole.event_horizon_display()
+                c.display_game_zone()
+                for i in object:
+                    i.leapfrog(hole)
+                    f.collide(i, object, hole)
+                    i.display()
+                    i.display_trajectory()
+                if j%100==0:
+                    plt.show()
+                    plt.pause(0.01)
+                if player1.loose or player2.loose:
+                    break
+            break
+    else:
+        if player1.light_shot + player1.heavy_shot == 0:
+            for j in range(4000):
+                plt.clf()
+                hole.event_horizon_display()
+                c.display_game_zone()
+                for i in object:
+                    i.leapfrog(hole)
+                    f.collide(i, object, hole)
+                    i.display()
+                    i.display_trajectory()
+                if j%100==0:
+                    plt.show()
+                    plt.pause(0.02)
+                if player1.loose or player2.loose:
+                    break
+            break
 
     for j in range(200):
         for i in object:
             i.leapfrog(hole)
-            if fire:
+            if i.shooting:
                 f.collide(i, object[0:-2], hole)
                 if i == object[-1]:
                     f.collide(i, object[1:], hole)
@@ -95,14 +92,20 @@ while not player.loose and not foe.loose:
     for i in object:
         i.display()
 
-    if player.loose or foe.loose:
+    if player1.loose or player2.loose:
         plt.show(block=False)
         break
 
     plt.show(block=False)
-    object , fire = f.action(object, player)
+    if two_player:
+        print("Player 1 : ")
+        object = f.action(object, player1)
+        print("Player 2 : ")
+        object = f.action(object, player2)
+    else:
+        object = f.action(object, player1)
 
-if player.loose or foe.r >= c.GAME_ZONE:
+if player1.loose or player2.r >= c.GAME_ZONE:
     print("You loose.")
 else:
     print("You win.")

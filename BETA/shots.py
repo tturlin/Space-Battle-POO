@@ -23,6 +23,7 @@ class Heavy_shot():
         self.trajplot = np.zeros((1, 2), dtype=float)
         self.trajplot[0, 0] = self.theta
         self.trajplot[0, 1] = self.r
+        self.shooting = False
 
     def __repr__(self):
         pass
@@ -88,6 +89,7 @@ class Light_shot():
         self.trajplot = np.zeros((1, 2), dtype=float)
         self.trajplot[0, 0] = self.theta
         self.trajplot[0, 1] = self.r
+        self.shooting = False
 
     def display(self):
         plt.polar(self.theta, self.r, '+', c=self.color, markersize=5)
