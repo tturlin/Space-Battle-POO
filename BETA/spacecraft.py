@@ -67,14 +67,6 @@ Light shot(s) remaining : {5}""".format(self.r, self.theta, self.vt,
             if i%100 == 0:
                 self.trajplot = np.append(self.trajplot, [traj[i,:]], axis=0)
 
-            if self.r >= c.GAME_ZONE:
-                self.theta = self.theta + np.pi
-                self.vr = -self.vr
-                self.vt = -self.vt
-                self.trajplot = np.zeros((1, 2), dtype=float)
-                self.trajplot[0, 0] = self.theta
-                self.trajplot[0, 1] = self.r
-
             self.stop_condition()
             if self.loose:
                 break

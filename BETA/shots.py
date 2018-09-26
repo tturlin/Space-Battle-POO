@@ -67,10 +67,9 @@ class Heavy_shot():
 
             if i%100 == 0:
                 self.trajplot = np.append(self.trajplot, [traj[i,:]], axis=0)
-            self.stop_condition()
+            self.stop_condition(black_hole)
             if self.loose:
                 break
-
 
     def display_trajectory(self):
         plt.polar(self.trajplot[:,0], self.trajplot[:,1], c=self.color, linestyle = '', marker = ',' )
@@ -138,7 +137,7 @@ class Light_shot():
 
             if i%100 == 0:
                 self.trajplot = np.append(self.trajplot, [traj[i,:]], axis=0)
-            self.stop_condition()
+            self.stop_condition(black_hole)
             if self.loose:
                 break
 

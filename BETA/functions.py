@@ -148,7 +148,6 @@ def two_player():
 
 
     dist = 0
-    angle = 'q'
     vt = 0
     vr = 0
 
@@ -157,12 +156,6 @@ def two_player():
     while dist <= 1. or dist > c.GAME_ZONE:
         try:
             dist = float(input("Distance to the event horizon , in Rs : "))
-        except:
-            pass
-
-    while type(angle) != type(1.):
-        try:
-            angle = float(input("Angle from axis, in rad : "))
         except:
             pass
 
@@ -178,14 +171,42 @@ def two_player():
         except:
             pass
 
-    player2 = Spacecraft(dist, angle, vr, vt, 'r')
+    player2 = Spacecraft(dist, angle + np.pi, vr, vt, 'r')
     return player1, player2, two_player
 
 
 def recoil(spacecraft, heavy_shot):
-    vs = np.array([spacecraft.vt, spacecraft.vr])
-    vh = np.array([heavy_shot.vt, heavy_shot.vr])
-    vs -= vh*np.log(spacecraft.mass/(spacecraft.mass - heavy_shot.mass))
+    spacecraft.v = np.array([spacecraft.vt, spacecraft.vr])
+    heavy_shot.v = np.array([heavy_shot.vt, heavy_shot.vr])
+    spacecraft.v -= vh*np.log(spacecraft.mass/(spacecraft.mass - heavy_shot.mass))
     spacecraft.mass -= heavy_shot.mass
-    spacecraft.vt = vs[0]
-    spacecraft.vr = vs[1]
+    spacecraft.vt = spacecraft.v[0]
+    spacecraft.vr = spacecraft.v[1]
+
+def zone_verification(object, hole):
+    for i in object:
+        if i.r >= c.GAME_ZONE:
+            i.theta = i.theta + np.pi
+            i.vr = -i.vr
+            i.vt = -i.vt
+            i.trajplot = np.zeros((1, 2), dtype=float)
+            i.trajplot[0, 0] = i.theta
+            i.trajplot[0, 1] = i.r
+
+def zone_verification_vlib(object, hole):
+    for i in object:
+        vlib = np.sqrt((2*hole.g*hole.mass)/i.r)
+        v = np.sqrt(np.vdot([[i.vr], [i.vt]],[[i.vr], [i.vt]]))
+        if v < vlib and i.r > c.GAME_ZONE and type(i) == Spacecraft:
+            many = 0
+            while i.r > c.GAME_ZONE or many < (c.LEN_VLIB + 1):
+                i.leapfrog(hole)
+                many += 1
+            if many == c.LEN_VLIB:
+                i.etat = False
+            for j in object:
+                if j != i:
+                    for k in range(many+1):
+                        j.leapfrog(hole)
+        elif v >= vlib and i.r > c.GAME_ZONE:
+            i.loose = True

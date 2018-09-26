@@ -19,9 +19,11 @@ DT = 1/1000
 
 LEN_INTEGRATION = 150
 
-GAME_ZONE = 100
+GAME_ZONE = 100.
 
 GZ = GAME_ZONE * np.ones(NTHETA)
+
+LEN_VLIB = 100000
 
 def display_game_zone():
     plt.polar(THETA_ARRAY, GZ, 'k')

@@ -9,7 +9,14 @@ import functions as f
 from shots import *
 from spacecraft import Spacecraft
 
+verif = ""
+
 hole = Black_hole(100)
+
+while verif not in ["Limit condition", "Liberation speed"]:
+    verif = input("Which exit condition would you use : Liberation speed or Limit condition ?")
+
+
 
 two_player = int(input("Would you play in solo mode or two player mode ?\nSolo mode = 1\nTwo player mode = 2\n"))
 if two_player == 1:
@@ -35,8 +42,6 @@ while not player1.loose and not player2.loose:
     c.display_game_zone()
 
 
-
-
     if two_player:
         if player1.light_shot + player1.heavy_shot == 0 and player2.light_shot + player2.heavy_shot == 0:
             for j in range(4000):
@@ -46,6 +51,10 @@ while not player1.loose and not player2.loose:
                 for i in object:
                     i.leapfrog(hole)
                     f.collide(i, object, hole)
+                    if verif == "Limit condition":
+                        f.zone_verification(object, hole)
+                    else:
+                        f.zone_verification_vlib(object, hole)
                     i.display()
                     i.display_trajectory()
                 if j%100==0:
@@ -63,6 +72,10 @@ while not player1.loose and not player2.loose:
                 for i in object:
                     i.leapfrog(hole)
                     f.collide(i, object, hole)
+                    if verif == "Limit condition":
+                        f.zone_verification(object, hole)
+                    else:
+                        f.zone_verification_vlib(object, hole)
                     i.display()
                     i.display_trajectory()
                 if j%500==0:
@@ -81,16 +94,22 @@ while not player1.loose and not player2.loose:
                     f.collide(i, object[1:], hole)
             else:
                 f.collide(i, object, hole)
+            if verif == "Limit condition":
+                f.zone_verification(object, hole)
+            else:
+                f.zone_verification_vlib(object, hole)
             i.display_trajectory()
 
     for i in object:
         i.display()
 
     if player1.loose or player2.loose:
-        plt.show(block=False)
+        plt.show()
+        plt.pause(0.02)
         break
 
-    plt.show(block=False)
+    plt.show()
+    plt.pause(0.02)
 
     if two_player:
         print("Player 1 : ")
@@ -105,7 +124,7 @@ while not player1.loose and not player2.loose:
     else:
         print(player1.__repr__())
         object = f.action(object, player1)
-    
+
 if not two_player:
     if player1.loose or player2.r >= c.GAME_ZONE:
         print("You loose.")
