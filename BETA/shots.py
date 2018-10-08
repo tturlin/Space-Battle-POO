@@ -67,7 +67,7 @@ class Heavy_shot():
 
             if i%100 == 0:
                 self.trajplot = np.append(self.trajplot, [traj[i,:]], axis=0)
-            self.stop_condition(black_hole)
+            self.stop_condition()
             if self.loose:
                 break
 
@@ -137,7 +137,7 @@ class Light_shot():
 
             if i%100 == 0:
                 self.trajplot = np.append(self.trajplot, [traj[i,:]], axis=0)
-            self.stop_condition(black_hole)
+            self.stop_condition()
             if self.loose:
                 break
 
