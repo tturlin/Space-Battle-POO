@@ -8,6 +8,7 @@ import numpy as np
 class Spacecraft():
     """Class used to describe all spacecrafts around the black hole."""
     def __init__(self,r ,theta, vr, vt, color):
+        """Initialisation of his variable"""
         self.r = r
         self.theta = theta
         self.vr = vr
@@ -36,12 +37,14 @@ Light shot(s) remaining : {5}""".format(self.r, self.theta, self.vt,
                                                 self.light_shot)
 
     def display(self):
+        """Display current position"""
         plt.polar(self.theta, self.r, '*', c=self.color, markersize=5)
 
     def acceleration(self, r,  black_hole):
         self.ar = - (black_hole.g * black_hole.mass)/(self.r**2) + (self.r - 3/2)*(self.l0**2/(self.r**4))
 
     def leapfrog(self, black_hole):
+        """Leapfrog integration pf his trajectory"""
         traj = np.zeros((c.LEN_INTEGRATION, 2), dtype=float)
         velocity = np.zeros((c.LEN_INTEGRATION, 2), dtype=float)
 

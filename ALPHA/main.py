@@ -67,6 +67,8 @@ while not player.loose and not foe.loose:
     print(player.__repr__())
 
     if player.light_shot + player.heavy_shot == 0:
+        # If it remain no shots to the player, starting a long leapfrog to see
+        # what happen and if any spacecraft win 
         for j in range(4000):
             for i in object:
                 i.leapfrog(hole)

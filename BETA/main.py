@@ -31,6 +31,7 @@ c.display_game_zone()
 
 object = [player1, player2]
 
+# Displaying objects that is player 1 and foe/player 2 just now
 for i in object:
     i.display()
 plt.show(block=False)
@@ -41,7 +42,7 @@ while not player1.loose and not player2.loose:
     hole.event_horizon_display()
     c.display_game_zone()
 
-
+    # Starting a long series of leapfrog if no shots remain to exh players
     if two_player:
         if player1.light_shot + player1.heavy_shot == 0 and player2.light_shot + player2.heavy_shot == 0:
             for j in range(4000):
@@ -85,6 +86,7 @@ while not player1.loose and not player2.loose:
                     break
             break
 
+    # Calculation of the movement during this turn
     for j in range(200):
         for i in object:
             i.leapfrog(hole)

@@ -1,0 +1,1 @@
+The code compile in Python 3. For the gold version, the main file is Window.py.

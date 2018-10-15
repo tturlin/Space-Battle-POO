@@ -4,6 +4,8 @@ from shots import *
 from spacecraft import Spacecraft
 
 def action(object, spacecraft):
+    """Managing actions of players, that is waiting, light shot launching and
+    heavy shot launching."""
     if type(object[-1]) == Light_shot or type(object[-1]) == Heavy_shot:
         object[-1].collide_sphere = 0.01
     act = input("What do you wanna do this turn : Wait, Light shot, Heavy shot ? ")
@@ -35,6 +37,7 @@ def action(object, spacecraft):
     return object, fire
 
 def collide(actual,objects, hole):
+    """Collision algorithm"""
     for i in objects:
         if i != actual:# and (not i.loose and not actual.loose):
             dist = np.sqrt(i.r**2 + actual.r**2 - 2*i.r*actual.r*np.cos(abs(i.theta - actual.theta)))

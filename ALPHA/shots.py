@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class Heavy_shot():
-    """Gestion des missiles lourds"""
+    """Managing heavy shot"""
     def __init__(self, phi, spacecraft):
+        """Initialisation of his variable"""
         self.r = spacecraft.r
         v=0.1
         self.theta =spacecraft.theta
@@ -28,12 +29,14 @@ class Heavy_shot():
         pass
 
     def display(self):
+        """Display current trajectory"""
         plt.polar(self.theta, self.r, '+', c=self.color, markersize=5)
 
     def acceleration(self, r,  black_hole):
         self.ar = - (black_hole.g * black_hole.mass)/(self.r**2) + (self.r - 3/2)*(self.l0**2/(self.r**4))
 
     def leapfrog(self, black_hole):
+        """Leapfrog integration of his trajectory"""
         traj = np.zeros((c.LEN_INTEGRATION, 2), dtype=float)
         velocity = np.zeros((c.LEN_INTEGRATION, 2), dtype=float)
 
@@ -72,8 +75,9 @@ class Heavy_shot():
 
 
 class Light_shot():
-    """Gestion des missiles leger"""
+    """Managing light shot"""
     def __init__(self, phi, spacecraft):
+        """Initialisation of hid variable"""
         self.r = spacecraft.r
         v=0.3
         self.theta =spacecraft.theta
@@ -90,12 +94,14 @@ class Light_shot():
         self.trajplot[0, 1] = self.r
 
     def display(self):
+        """Display current trajectory"""
         plt.polar(self.theta, self.r, '+', c=self.color, markersize=5)
 
     def acceleration(self, r,  black_hole):
         self.ar = - (black_hole.g * black_hole.mass)/(self.r**2) + (self.r - 3/2)*(self.l0**2/(self.r**4))
 
     def leapfrog(self, black_hole):
+        """Leapfrog integration of his trajectory"""
         traj = np.zeros((c.LEN_INTEGRATION, 2), dtype=float)
         velocity = np.zeros((c.LEN_INTEGRATION, 2), dtype=float)
 

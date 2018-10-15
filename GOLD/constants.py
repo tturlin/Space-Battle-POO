@@ -3,6 +3,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Some constants
+
 C = 1
 
 M_SOL = 1.988e30 # unit kg
@@ -24,6 +26,3 @@ GAME_ZONE = 200.
 GZ = GAME_ZONE * np.ones(NTHETA)
 
 LEN_VLIB = 100000
-
-def display_game_zone():
-    plt.polar(THETA_ARRAY, GZ, 'k')

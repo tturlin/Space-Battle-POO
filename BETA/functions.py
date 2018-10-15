@@ -4,6 +4,8 @@ from shots import *
 from spacecraft import Spacecraft
 
 def action(object, spacecraft):
+    """Managing actions of players, that is waiting, light shot launching and
+    heavy shot launching."""
     if type(object[-2]) == Light_shot or type(object[-2]) == Heavy_shot:
         object[-2].collide_sphere = 1
     act = input("What do you wanna do this turn : Wait, Light shot, Heavy shot ? ")
@@ -35,6 +37,7 @@ def action(object, spacecraft):
     return object
 
 def collide(actual,objects, hole):
+    """Collision algorithm"""
     for i in objects:
         if i != actual:# and (not i.loose and not actual.loose):
             dist = np.sqrt(i.r**2 + actual.r**2 - 2*i.r*actual.r*np.cos(abs(i.theta - actual.theta)))
@@ -70,6 +73,7 @@ def collide(actual,objects, hole):
 
 
 def one_player():
+    """One player mode initialization."""
     two_player = False
     dist = 0
     angle = 'q'
@@ -112,6 +116,7 @@ def one_player():
 
 
 def two_player():
+    """Two player mode initialization"""
     two_player = True
     dist = 0
     angle = 'q'
@@ -176,14 +181,16 @@ def two_player():
 
 
 def recoil(spacecraft, heavy_shot):
+    """Calculation of the spacecraft recoil when lauching a heavy shot"""
     spacecraft.v = np.array([spacecraft.vt, spacecraft.vr])
     heavy_shot.v = np.array([heavy_shot.vt, heavy_shot.vr])
-    spacecraft.v -= vh*np.log(spacecraft.mass/(spacecraft.mass - heavy_shot.mass))
+    spacecraft.v -= spacecraft.v*np.log(spacecraft.mass/(spacecraft.mass - heavy_shot.mass))
     spacecraft.mass -= heavy_shot.mass
     spacecraft.vt = spacecraft.v[0]
     spacecraft.vr = spacecraft.v[1]
 
 def zone_verification(object, hole):
+    """Verify if object is in the game, with a periodical limit condition return"""
     for i in object:
         if i.r >= c.GAME_ZONE:
             i.theta = i.theta + np.pi
@@ -194,6 +201,8 @@ def zone_verification(object, hole):
             i.trajplot[0, 1] = i.r
 
 def zone_verification_vlib(object, hole):
+    """Verification of the spacecraft's speed and compare it with the liberation
+    speed of the black hole when spacecraft is a the limit of the game zone"""
     for i in object:
         vlib = np.sqrt((2*hole.g*hole.mass)/i.r)
         v = np.sqrt(np.vdot([[i.vr], [i.vt]],[[i.vr], [i.vt]]))
